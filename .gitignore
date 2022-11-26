@@ -9,7 +9,7 @@ trained_weights/
 ### JupyterNotebooks ###
 # gitignore template for Jupyter Notebooks
 # website: http://jupyter.org/
-outputs/
+outputs/epoch_log/
 
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
