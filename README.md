@@ -6,7 +6,7 @@ In this work, we provide a competitive and efficient Deep Ensemble method for qu
 Overview :
 EfficentEnsemble requires only one RPN network and multiple Faster R-CNN prediction heads which is lightweight and less computationally expensive to quantify uncertainity.
 
-![image]()
+![image](https://github.com/Akola-Mbey-Denis/EfficientEnsemble/blob/master/Deep%20Ensembles.png)
 
 
 
@@ -14,6 +14,5 @@ EfficentEnsemble requires only one RPN network and multiple Faster R-CNN predict
 
 ### We perform experiments on Three datasets : MOT16, KITTI,BDD100K
 
-### Monocular depth estimation example
-In folder `monocular_depth_estimation/`, we provide the codes and instructions for LDU applying on monocular depth estimation task. The detailed information is shown on `monocular_depth_estimation/README.md`.
+
 
