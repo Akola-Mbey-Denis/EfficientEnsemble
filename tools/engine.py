@@ -15,7 +15,6 @@ import torch.distributed as dist
 from torchmetrics.functional import calibration_error
 from utils.calibration_utils import get_batch_statistics
 import torch.distributed as dist
-from mmcv.ops.nms import nms_match, soft_nms
 from ensemble_suite import NaiveAveragger,weighted_boxes_fusion
 from torch.nn.functional import normalize
 def is_dist_avail_and_initialized():

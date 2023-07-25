@@ -22,7 +22,6 @@ from utils.seed import set_seed, setup_cudnn
 from models.faster_rcnn import FRCNN_FPN
 from torchmetrics.functional import calibration_error
 from utils.calibration_utils import get_batch_statistics
-from mmcv.ops.nms import nms_match, soft_nms
 from ensemble_suite import NaiveAveragger,weighted_boxes_fusion
 from torch.nn.functional import normalize
 from utils.detection_utils import visualize_boxes_and_labels_on_image_array

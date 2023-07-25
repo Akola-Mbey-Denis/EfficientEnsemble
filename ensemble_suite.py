@@ -1,5 +1,6 @@
 import torch
-from mmcv.ops.nms import nms_match, soft_nms,nms
+# from mmcv.ops.nms import nms_match, soft_nms,nms
+from pt_soft_nms import batched_soft_nms, soft_nms
 
 def NaiveAveragger(boxes,scores,labels,iou_threshold,nms_method="soft"):
     """This function merges the output of an ensemble by
@@ -22,12 +23,12 @@ def NaiveAveragger(boxes,scores,labels,iou_threshold,nms_method="soft"):
         matches = [np.array([ind]) for ind in inds]
 
         
-    elif nms_method =='match':
-        X=np.array(boxes)
-        scores =np.array(scores).reshape(-1,1)
-        boxes=np.column_stack((X, scores)).astype(np.float32)
+    # elif nms_method =='match':
+    #     X=np.array(boxes)
+    #     scores =np.array(scores).reshape(-1,1)
+    #     boxes=np.column_stack((X, scores)).astype(np.float32)
  
-        matches = nms_match(boxes, iou_threshold) 
+    #     matches = nms_match(boxes, iou_threshold) 
       
        
     elif nms_method=='nms':
