@@ -86,7 +86,7 @@ else:
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
 # Instantiate model
-model = FRCNN_FPN(num_classes =args['NUM_CLASSES'])
+model = FRCNN_FPN(num_classes =args['NUM_CLASSES'],init="Kaiming")
 # move model to the right device
 model.to(device)
 

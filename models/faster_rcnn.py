@@ -36,9 +36,53 @@ class FastRCNNPredictor(nn.Module):
             scores  = self.cls_score(x)
             bbox_deltas = self.bbox_pred(x)
         return scores, bbox_deltas
+
+class FastRCNNPredictor(nn.Module):
+    """
+    Standard classification + bounding box regression layers
+    for Fast R-CNN.
+    Adopted from Pytorch official repo and weight initialisation modified
+
+    Args:
+        in_channels (int): number of input channels
+        num_classes (int): number of output classes (including background)
+    """
+
+    def __init__(self, in_channels, num_classes,init="Kaiming",dropout_precent=0.20,use_dropout=False):
+        super().__init__()
+        self.cls_score = nn.Linear(in_channels, num_classes)
+        self.bbox_pred = nn.Linear(in_channels, num_classes * 4)
+        self.drop =dropout_precent
+        self.activate_dropout =use_dropout
+        
+        #Weight initialisation
+        if init=="Kaiming":
+            nn.init.kaiming_normal_(self.cls_score.weight, mode='fan_in', nonlinearity='relu')
+            nn.init.kaiming_normal_(self.bbox_pred.weight, mode='fan_in', nonlinearity='relu')
+        
+        if init=="Xavier":
+              nn.init.xavier_normal_(self.cls_score.weight)
+              nn.init.xavier_normal_(self.bbox_pred.weight)
+        if init =="uniform":
+            nn.init.uniform_(self.cls_score.weight)
+            nn.init.uniform_(self.bbox_pred.weight)        
+         
+
+    def forward(self, x):
+        if x.dim() == 4:
+            assert list(x.shape[2:]) == [1, 1]
+        x = x.flatten(start_dim=1)
+        if self.activate_dropout:
+            scores = F.dropout(self.cls_score(x),p=self.drop,training=True)
+            bbox_deltas = F.dropout(self.bbox_pred(x),p=self.drop,training=True)
+        else:
+            scores  = self.cls_score(x)
+            bbox_deltas = self.bbox_pred(x)
+        return scores, bbox_deltas
+
 class FRCNN_FPN(FasterRCNN):
 
-    def __init__(self, num_classes,dropout=0.20,use_dropout=False):
+    def __init__(self, num_classes,dropout=0.20,use_dropout=False, init="Kaiming"):
         backbone = resnet_fpn_backbone('resnet101', True)
         super(FRCNN_FPN, self).__init__(backbone, num_classes, box_detections_per_img=300)
         # these values are cached to allow for feature reuse
@@ -46,12 +90,12 @@ class FRCNN_FPN(FasterRCNN):
         self.preprocessed_images = None
         self.features = None
         self.num_classes =num_classes
-        self.drop_out=dropout
-        self.activate_dropout =use_dropout
+        self.drop_out = dropout
+        self.activate_dropout = use_dropout
         self.roi_heads.nms_thresh = 0.50
-        if self.activate_dropout:
-            self.in_features = self.roi_heads.box_predictor.cls_score.in_features
-            self.roi_heads.box_predictor = FastRCNNPredictor(self.in_features, self.num_classes,self.drop_out,self.activate_dropout)
+    
+        self.in_features = self.roi_heads.box_predictor.cls_score.in_features
+        self.roi_heads.box_predictor = FastRCNNPredictor(in_channels= self.in_features, num_classes= self.num_classes, dropout_precent= self.dropout_precent,use_dropout= self.activate_dropout, init =init)
 
     def detect(self, img):
         device = list(self.parameters())[0].device
