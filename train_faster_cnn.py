@@ -72,13 +72,13 @@ if data =='KITTI':
     train_indices, val_indices = indices[split:], indices[:split]
     train_sampler = SubsetRandomSampler(train_indices)
     valid_sampler = SubsetRandomSampler(val_indices)
-    train_loader = torch.utils.data.DataLoader(dataset, batch_size=args['BATCH_SIZE'], shuffle=False, num_workers=4,
+    train_loader = torch.utils.data.DataLoader(dataset, batch_size=args['BATCH_SIZE'], shuffle=True, num_workers=4,
     collate_fn=dataset.collate_fn, sampler=train_sampler)
     validation_loader = torch.utils.data.DataLoader(dataset, batch_size=args['BATCH_SIZE'], shuffle=False, num_workers=4,
     collate_fn=dataset.collate_fn, sampler=valid_sampler)
 else:
     # dataloader for training
-    train_loader = torch.utils.data.DataLoader(dataset, batch_size=args['BATCH_SIZE'], shuffle=False, num_workers=4,
+    train_loader = torch.utils.data.DataLoader(dataset, batch_size=args['BATCH_SIZE'], shuffle=True, num_workers=4,
     collate_fn=dataset.collate_fn)
     validation_loader=torch.utils.data.DataLoader(dataset_validation, batch_size=args['BATCH_SIZE'], shuffle=False, num_workers=4,
     collate_fn=dataset.collate_fn)
@@ -104,6 +104,7 @@ train_mAP_list = []
 val_mAP = []
 
 best_mAP = 0
+OUTPUT_DIR = args['OUTPUT_DIR']
 writer = SummaryWriter(os.path.join(args['OUTPUT_DIR'], 'epoch_log'))
 
 for epoch in range(0, args['EPOCHS']):
